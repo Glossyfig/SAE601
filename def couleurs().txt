@@ -1,0 +1,37 @@
+def couleurs():
+    st.markdown(
+        """
+        <style>
+        div[data-baseweb="select"] > div {
+            border: 2px solid #4d2c7c; 
+            border-radius: 8px; 
+            padding: 4px;
+        }
+        
+        div[data-baseweb="select"]:focus-within > div {
+            border: 2px solid #4d2c7c;
+            box-shadow: 0 0 8px #4d2c7c; 
+        }
+        
+        div[data-baseweb="select"]:focus-within > div {
+                border: 2px solid #4d2c7c;  /* Bordure violette */
+                box-shadow: 0 0 8px #4d2c7c; /* Ombre violette */
+            }
+        .stTabs [data-baseweb="tab"] {
+                height: 50px;
+                color:#4d2c7c;
+                border-radius: 4px 4px 0px 0px;
+                gap: 1px;
+                padding-top: 10px;
+                padding-bottom: 10px;
+            }
+        .stTabs [aria-selected="true"] {
+                color: #4d2c7c;
+                border :2px solid #4d2c7c;
+                border-bottom: 3px solid #4d2c7c !important;
+            }
+  
+        </style>
+        """,
+        unsafe_allow_html=True,
+    )
