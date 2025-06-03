@@ -13,6 +13,13 @@ Site web d'intérêt : [Limitless TCG](https://play.limitlesstcg.com/)
 ## Utilisation des fichiers :hammer_and_wrench: 
 L'organisation de ce repository est similaire à l'ordre dans lequel les fichiers doivent être exécuter ou étudier : Collection, transformation et application web.
 
+### Data collection
+Dans ce dossier le premier script à exécuter :
+- le script python du fichier [Extraction_donnees_cartes.py](data_collection/Extraction_donnees_carte.py) : scrappe les données en ligne des cartes 
+
+### Data transformation
+[voir le dossier correspondant](./data_transformation)
+
 ### Data visualisation 
 Pour lancer l'application web streamlit en local sur votre machine, exécuter la commande suivante dans un terminal, après s'être placer dans le répertoire qui contient le fichier (application) : 
 ```
