@@ -161,8 +161,8 @@ for part_url in id_carte:
                 poke_pre_evo = lines[1]
             else:
                 poke_pre_evo = pre_evo_info
-        card_data["Stage d'évolution"] = stage_evo
-        card_data["Pré-évolution"] = poke_pre_evo
+        card_data["Stage_devolution"] = stage_evo
+        card_data["Pre_evolution"] = poke_pre_evo
         
         # Type et PV
         set_span = soup_carte.select_one(".card-text-title")
@@ -199,15 +199,16 @@ for part_url in id_carte:
                 "Degat": int(re.search(r'\d+', elements[2]).group()) if len(elements) > 2 and re.search(r'\d+', elements[2]) else "Inconnu",
                 "Nom": re.sub(r'\d+', '', elements[2]) if len(elements) > 2 else "Inconnu"
             }
-        card_data["Nom de l'attaque 1"] = attaque1.get("Nom", "Inconnu")
-        card_data["Coût de l'attaque 1"] = attaque1.get("Cout", "Inconnu")
-        card_data["Dégat de l'attaque 1"] = attaque1.get("Degat", "Inconnu")
-        card_data["Nom de l'attaque 2"] = attaque2.get("Nom", "Inconnu")
-        card_data["Coût de l'attaque 2"] = attaque2.get("Cout", "Inconnu")
-        card_data["Dégat de l'attaque 2"] = attaque2.get("Degat", "Inconnu")
+        card_data["Nom_attaque_1"] = attaque1.get("Nom", "Inconnu")
+        card_data["Cout_attaque_1"] = attaque1.get("Cout", "Inconnu")
+        card_data["Degat_attaque_1"] = attaque1.get("Degat", "Inconnu")
+        card_data["Nom_attaque_2"] = attaque2.get("Nom", "Inconnu")
+        card_data["Cout_attaque_2"] = attaque2.get("Cout", "Inconnu")
+        card_data["Degat_attaque_2"] = attaque2.get("Degat", "Inconnu")
         
         # Affichage dans la console
         print(f"URL : {url_carte}")
+        print(f"Type de carte : {categorie_carte}")
         print(f"Nom : {card_name}")
         print(f"Image : {image_url}")
         print(f"Extension : {card_set}")
