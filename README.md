@@ -5,8 +5,9 @@
 Il s'agit d'un travail collaboratif réalisé en équipe sur le développement d'un outil et d'analyses autour du métagame Pocket, le jeu de carte à collectionner Pokémon. Notre objectif était d'identifier les cartes avec un taux de victoire élevé, leurs fonctionnements et évolutions. Derrière ces observations, il est aussi question de <ins> mesurer l'impact de ces cartes sur les stratégies adoptées lors des tournois et d'explorer les moyens de les contrer </ins>. \
 Site web d'intérêt : [Limitless TCG](https://play.limitlesstcg.com/)
 
-## Logiciels/langages utilisés :pushpin:
-- **python** : Le langage utilisé pour tous les codes à exécuter (*collecte des données,...*)
+## Logiciels/langages/ principaux packages utilisés :pushpin:
+- **python** : Le langage de programmation utilisé pour tous la plupart des codes à exécuter (*collecte des données,...*)
+- **BeautifulSoup** : Bibliothèque python utilisé pour le scrapping des données web
 - **PostgreSQL** :  Serveur de base de données utilisé
 - **Streamlit** : Bibliothèque python utilisé pour l'application web
 - **Dbeaver** : Interface utilisé pour accéder à la base de données
@@ -23,7 +24,7 @@ Une fois les fichiers à disposition, exécuter le script [main.py](./data_trans
 
 Il faut cependant s'assurer avant de le lancer:
 - que les données sont bien stockées dans le répertoire sur lequel pointent les variables output_directory et output_directory2 : datacollection/output (Les modifier si nécessaires)
-- que la base de données créée porte bien le nom *postgresql* et que le port local de la machine est le 5432 (Les modifier si nécessaires)
+- que la base de données créée porte bien le nom *postgresql* et que le port local de votre machine est le 5432 (Les modifier si nécessaires)
 - Vérifier les autres paramètres de connexion
 
 ```
@@ -39,7 +40,7 @@ output_directory2 = "C:/.../.../.../.../BUT_SD/SAE601_2025/data_collection/carte
 def get_connection_string():
   return "postgresql://postgres@localhost:5432"
 ```
-A noté qu'aucun ETL n'a été utilisé pour les transformation uniquement le code python. Il contient une fonction d'anonymisation des identifiants des joueurs et exécute le script sql qui en plus de sépare la date en élément de jours, mois et année. 
+A noté qu'aucun ETL n'a été utilisé pour les transformations, seul des scripts python ont été utilisés. Le fichier <ins>main.py</ins> contient donc une fonction d'anonymisation pour les identifiants des joueurs et exécute le script sql qui en plus de l'insertion des données dans les tables, décompose la date en élément de jours, mois et année. 
 
 ### Data visualisation 
 Pour lancer l'application web streamlit en local sur votre machine, exécuter la commande suivante dans un terminal, après s'être placé dans le répertoire qui contient le fichier (application) : 
@@ -51,5 +52,5 @@ Une fenêtre s'ouvrira dans votre navigateur.
 ## Contributeurs :technologist:
 - [@Kila-ht](https://github.com/Kila-ht)
 - [@matiornn](https://github.com/matiornn)
-- [@glossyfig](https://github.com/Glossyfig)
 - [@gina_ju](https://github.com/ginaju)
+- [@glossyfig](https://github.com/Glossyfig)
