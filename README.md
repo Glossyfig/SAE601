@@ -13,7 +13,7 @@ Site web d'intérêt : [Limitless TCG](https://play.limitlesstcg.com/)
 - **Dbeaver** : Interface utilisé pour accéder à la base de données
 
 ## Utilisation des fichiers :hammer_and_wrench: 
-L'organisation de ce repository est similaire à l'ordre dans lequel les différents fichiers doivent être exécuter ou étudier : Collection, transformation et application web.
+L'organisation de ce repository est similaire à l'ordre dans lequel les différents fichiers doivent être exécutés ou étudiés : Collection, transformation et application web (data visualisation).
 
 ### Data collection
 Dans ce dossier le premier script à exécuter est :
@@ -40,7 +40,7 @@ output_directory2 = "C:/.../.../.../.../BUT_SD/SAE601_2025/data_collection/carte
 def get_connection_string():
   return "postgresql://postgres@localhost:5432"
 ```
-A noté qu'aucun ETL n'a été utilisé pour les transformations, seul des scripts python ont été utilisés. Le fichier <ins>main.py</ins> contient donc une fonction d'anonymisation pour les identifiants des joueurs et exécute le script sql qui en plus de l'insertion des données dans les tables, décompose la date en élément de jours, mois et année. 
+A noté qu'aucun ETL n'a été utilisé pour les transformations, seuls des scripts python ont été utilisés. Le fichier <ins>main.py</ins> contient donc une fonction d'anonymisation pour les identifiants des joueurs et exécute le script sql qui en plus de l'insertion des données dans les tables, décompose la date en éléments : jours, mois et année. 
 
 ### Data visualisation 
 Pour lancer l'application web streamlit en local sur votre machine, exécuter la commande suivante dans un terminal, après s'être placé dans le répertoire qui contient le fichier (application) : 
