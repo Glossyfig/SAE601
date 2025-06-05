@@ -98,7 +98,7 @@ def graphique_meilleur_win_rate(conn):
         tw.losses
     FROM wrk_tournaments_win tw
     JOIN wrk_tournaments t ON tw.tournament_id = t.tournament_id
-    GROUP BY tw.deck
+    GROUP BY t.tournament_date_y, tw.deck
     ORDER BY tw.winrates DESC;
     """
     
@@ -108,7 +108,7 @@ def graphique_meilleur_win_rate(conn):
         st.info("Aucune donnée à afficher pour les cartes par saison.")
         return
 
-    # Ne garder que les 5 cartes les plus jouées par saison
+    # Ne garder que les 5 decks les plus gagnants par saison
     df2_top = df.groupby("tournament_date_y").apply(lambda x: x.nlargest(5, "winrates")).reset_index(drop=True)
 
     seasons2 = df2_top["tournament_date_y"].unique()
