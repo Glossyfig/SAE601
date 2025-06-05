@@ -1,31 +1,31 @@
 # SAE601
 <img src="https://upload.wikimedia.org/wikipedia/commons/c/c2/Pokemon_TCG_Pocket_logo.png" width="500" />
 
-## Descriptif :memo:
-Il s'agit d'un travail collaboratif réalisé en équipe sur le développement d'un outil et d'analyses autour du métagame Pocket, le jeu de carte à collectionner Pokémon. Notre objectif était d'identifier les cartes avec un taux de victoire élevé, leurs fonctionnements et évolutions. Derrière ces observations, il est aussi question de <ins> mesurer l'impact de ces cartes sur les stratégies adoptées lors des tournois et d'explorer les moyens de les contrer </ins>. \
-Site web d'intérêt : [Limitless TCG](https://play.limitlesstcg.com/)
+## Description :memo:
+This is a collaborative team work on the development of a decisional tool and analysis related to the Pocket metagame, the Pokémon trading card game . Our main objective was to identify high win-rate cards and to understand their mechanics and evolution over time. Beyond this observations, the goal was also <ins>  to assess the impact of these cards on the strategies adopted during tournaments and to explore possible countermeasures </ins>. 
+web site of interest : [Limitless TCG](https://play.limitlesstcg.com/)
 
-## Logiciels/langages/ principaux packages utilisés :pushpin:
-- **python** : Le langage de programmation utilisé pour tous la plupart des codes à exécuter (*collecte des données,...*)
-- **BeautifulSoup** : Bibliothèque python utilisé pour le scrapping des données web
-- **PostgreSQL** :  Serveur de base de données utilisé
-- **Streamlit** : Bibliothèque python utilisé pour l'application web
-- **Dbeaver** : Interface utilisé pour accéder à la base de données
+## Software / Languages / Key Packages Used :pushpin:
+- **Python**: The main programming language used for most of the code execution (e.g., data collection, etc.)
+- **BeautifulSoup**: Python library used for web data scraping
+- **PostgreSQL**: Database server used for data storage and querying
+- **Streamlit**: Python library used to develop the web application
+- **DBeave**r: Interface used to access and manage the database
 
-## Utilisation des fichiers :hammer_and_wrench: 
-L'organisation de ce repository est similaire à l'ordre dans lequel les différents fichiers doivent être exécutés ou étudiés : Collection, transformation et application web (data visualisation).
+## File usage :hammer_and_wrench: 
+The structure of this repository follows the logical order in which the files should be executed or reviewed: data collection, transformation, and web application (data visualization).
 
 ### Data collection
-Dans ce dossier le premier script à exécuter est :
-- le script python du fichier [Extraction_donnees_cartes.py](data_collection/Extraction_donnees_carte.py), scrappe les données en ligne des cartes et les stock sous formes de fichiers JSON dans des dossiers (output, cache, ...).
+The first script to run in this folder is:
+- the file [Extraction_donnees_cartes.py](data_collection/Extraction_donnees_carte.py), it scrapes online card data and stores it as JSON files in folders (output, cache, etc.).
 
 ### Data transformation
-Une fois les fichiers à disposition, exécuter le script [main.py](./data_transformation/main.py) qui crée et insère les données dans les tables de decklist, cartes, et tournois. 
+Once the files are available, proceed by running the script [main.py](./data_transformation/main.py), which creates and inserts data into the decklist, cards, and tournaments tables.
 
-Il faut cependant s'assurer avant de le lancer:
-- que les données sont bien stockées dans le répertoire sur lequel pointent les variables output_directory et output_directory2 : datacollection/output (Les modifier si nécessaires)
-- que la base de données créée porte bien le nom *postgresql* et que le port local de votre machine est le 5432 (Les modifier si nécessaires)
-- Vérifier les autres paramètres de connexion
+Before running the script, please ensure the following:
+- The data files are correctly stored in the directories specified by the variables ```output_directory``` and ```output_directory2```: datacollection/output (modify these paths if necessary).
+- The database has been created with the name *postgresql* and that your local machine’s port is set to 5432 (adjust these settings if needed).
+- Verify all other connection parameters to ensure proper access
 
 ```
 postgres_db=os.environ.get('POSTGRES_DB')
@@ -40,16 +40,16 @@ output_directory2 = "C:/.../.../.../.../BUT_SD/SAE601_2025/data_collection/carte
 def get_connection_string():
   return "postgresql://postgres@localhost:5432"
 ```
-A noté qu'aucun ETL n'a été utilisé pour les transformations, seuls des scripts python ont été utilisés. Le fichier <ins>main.py</ins> contient donc une fonction d'anonymisation pour les identifiants des joueurs et exécute le script sql qui en plus de l'insertion des données dans les tables, décompose la date en éléments : jours, mois et année. 
-
+It's importante to notice that no ETL tools were used for data transformations; only Python scripts were employed. <ins> the main.py</ins> file includes a function for anonymizing player identifiers and executes the SQL script which, in addition to inserting data into the tables, parses the date into separate components: day, month, and year.
 ### Data visualisation 
-Pour lancer l'application web streamlit en local sur votre machine, exécuter la commande suivante dans un terminal, après s'être placé dans le répertoire qui contient le fichier (application) : 
+To launch the streamlit web application locally on your machine, open a terminal and run the following command after navigating to the directory containing the application file:
+
 ```
 streamlit run app.py
 ```
-Une fenêtre s'ouvrira dans votre navigateur.
+A window will open in your browser.
 
-## Contributeurs :technologist:
+## Contributors :technologist:
 - [@Kila-ht](https://github.com/Kila-ht)
 - [@matiornn](https://github.com/matiornn)
 - [@gina_ju](https://github.com/ginaju)
