@@ -51,7 +51,7 @@ CREATE TABLE public.wrk_cards (
 );
 
 DROP TABLE IF EXISTS public.wrk_tournaments_win;
-CREATE TABLE public.wrk_tournaments (
+CREATE TABLE public.wrk_tournaments_win (
   tournament_id varchar NULL,
   tournament_name varchar NULL,
   name varchar NULL,
