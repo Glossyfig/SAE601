@@ -89,6 +89,16 @@ def table_temp_tournaments(tournements):
 def nb_tournois(decklists):
     nb_tournois = decklists["tournament_id"].unique()
     st.write(f"Nombre de tournois: {len(nb_tournois)}")
+    
+def table_wrk_tournaments_win(conn):
+    cur = conn.cursor()
+    cur.execute('SELECT * FROM wrk_tournaments_win;')
+    rows = cur.fetchall()
+    cur.execute("SELECT COLUMN_NAME FROM information_schema.columns WHERE table_name = 'wrk_tournaments_win'")
+    names = cur.fetchall()
+    names_l = [l[0] for l in names]
+    df = pd.DataFrame(rows, columns=names_l)
+    return df
 
 # winrate moyen d'une carte par saison, tournois
 def analyse_usage_winrate_par_saison(decklists: pd.DataFrame, tournements: pd.DataFrame, win: pd.DataFrame, selected_card: str, selected_deck: str, selected_season):
