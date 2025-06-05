@@ -6,8 +6,8 @@ import logging
 # Configuration du logging
 logging.basicConfig(filename='errors.log', level=logging.ERROR)
 
-tournaments_folder_path = "C:/Users/matte/OneDrive/Bureau/SAE601_2025/data_collection/cache/tournament"
-json_folder_path = "C:/Users/matte/OneDrive/Bureau/SAE601_2025/data_collection/output"
+tournaments_folder_path = "C:/Users/matte/OneDrive/Bureau/SAE601_2025/data_collection/cache/tournament" # Chemin vers les données des tournois extraits avec le script main de data collection
+json_folder_path = "C:/Users/matte/OneDrive/Bureau/SAE601_2025/data_collection/output" # Chemin vers les données des tournois extraits avec le script main de data collection
 
 for root, dirs, files in os.walk(tournaments_folder_path):
     for file_name in files:
@@ -128,7 +128,7 @@ for root, dirs, files in os.walk(tournaments_folder_path):
                 print(player)
 
 
-players_json_folder_path = "C:/Users/matte/OneDrive/Bureau/SAE601_2025/data_collection/tournament_win"
+players_json_folder_path = "C:/Users/matte/OneDrive/Bureau/SAE601_2025/data_collection/tournament_win" # Chemin dans le dossier data_collection pour ajouter ce nouveau dossier
 
 os.makedirs(players_json_folder_path, exist_ok=True)
 
