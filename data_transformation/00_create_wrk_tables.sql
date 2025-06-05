@@ -29,23 +29,36 @@ UPDATE wrk_tournaments SET tournament_date_d = EXTRACT(DAY FROM tournament_date)
 
 DROP TABLE IF EXISTS public.wrk_cards;
 CREATE TABLE public.wrk_cards (
-  url_source text NULL,
-  categorie text NULL,
-  name text NULL,
-  image_url text NULL,
-  set_number_id text NULL,
+  url_source varchar NULL,
+  categorie varchar NULL,
+  name varchar NULL,
+  image_url varchar NULL,
+  set_number_id varchar NULL,
   card_number int NULL,
-  artist text NULL,
-  stage_evolution text NULL,
-  pre_evolution text NULL,
-  type_ text NULL,
+  artist varchar NULL,
+  stage_evolution varchar NULL,
+  pre_evolution varchar NULL,
+  type_ varchar NULL,
   heal_points int NULL,
-  weakness text NULL,
+  weakness varchar NULL,
   retreat int NULL,
-  attack_1_name text NULL,
-  attack_1_cost text NULL,
-  attack_1_damage text NULL,
-  attack_2_name text NULL,
-  attack_2_cost text NULL,
-  attack_2_damage text NULL
+  attack_1_name varchar NULL,
+  attack_1_cost varchar NULL,
+  attack_1_damage varchar NULL,
+  attack_2_name varchar NULL,
+  attack_2_cost varchar NULL,
+  attack_2_damage varchar NULL
+);
+
+DROP TABLE IF EXISTS public.wrk_tournaments_win;
+CREATE TABLE public.wrk_tournaments_win (
+  tournament_id varchar NULL,
+  tournament_name varchar NULL,
+  name varchar NULL,
+  placing int NULL,
+  victories int NULL,
+  losses int NULL,
+  draws int NULL,
+  winrates decimal NULL,
+  deck varchar NULL
 );
