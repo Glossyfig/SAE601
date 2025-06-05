@@ -90,51 +90,44 @@ def nb_tournois(decklists):
     nb_tournois = decklists["tournament_id"].unique()
     st.write(f"Nombre de tournois: {len(nb_tournois)}")
 
-#calcul winrate d'un deck    
-def calcul_winrate_reel(tournements_df, selected_deck, selected_season=None):
-    # Filtrer sur le deck
-    df_filtered = tournements_df[tournements_df['deck'] == selected_deck]
-    # Filtrer sur la saison si spécifiée (colonne 'tournament_date_y')
-    if selected_season is not None:
-        df_filtered = df_filtered[df_filtered['tournament_date_y'] == selected_season]
-    
-    if df_filtered.empty:
-        return None
-    
-    total_victories = df_filtered['victories'].sum()
-    total_losses = df_filtered['losses'].sum()
-    total_draws = df_filtered['draws'].sum()
-    total_matches = total_victories + total_losses + total_draws
-    
-    if total_matches == 0:
-        return None
-    
-    winrate = total_victories / total_matches
-    return winrate
-
 # winrate moyen d'une carte par saison, tournois
-def analyse_usage_winrate_par_saison(decklists: pd.DataFrame, tournements: pd.DataFrame, selected_card: str, selected_deck: str, selected_season):
-    # On filtre sur le deck sélectionné
+def analyse_usage_winrate_par_saison(decklists: pd.DataFrame, tournements: pd.DataFrame, win: pd.DataFrame, selected_card: str, selected_deck: str, selected_season):
+    # Filtrer sur le deck sélectionné
     df = decklists[decklists['deck'] == selected_deck]
     
-    # On fusionne avec les tournois pour récupérer la saison (année)
+    # Fusionner avec tournements pour récupérer la saison (année)
     df = df.merge(tournements[['tournament_id', 'tournament_date_y']], on='tournament_id', how='left')
     
-    # Si une saison est sélectionnée, on filtre dessus
+    # Filtrer sur la saison sélectionnée, si spécifiée
     if selected_season is not None:
         df = df[df['tournament_date_y'] == selected_season]
     
-    # On filtre sur la carte sélectionnée
+    # Filtrer sur la carte sélectionnée
     df_card = df[df['card_name'] == selected_card]
-    
     if df_card.empty:
-        return pd.DataFrame()  # Rien à afficher
+        return pd.DataFrame()  # Pas de données
     
-    # Calcul par saison (année)
-    stats = df_card.groupby('tournament_date_y').agg(
-        usage=('deck', 'count'),               # Nombre de joueurs (occurrences)
-        avg_winrate=('winrate', 'mean')       # Moyenne du winrate
-    ).reset_index()
+    # Compter usage par saison
+    usage_par_saison = df_card.groupby('tournament_date_y').agg(usage=('deck', 'count')).reset_index()
+    
+    # Pour calculer le winrate réel moyen par saison,
+    # on récupère dans la table win les winrates pour le deck sélectionné par saison
+    
+    # Filtrer la table win pour garder seulement le deck sélectionné
+    df_win = win[win['deck'] == selected_deck]
+    
+    # Fusionner avec tournements pour avoir la saison
+    df_win = df_win.merge(tournements[['tournament_id', 'tournament_date_y']], on='tournament_id', how='left')
+    
+    # Filtrer sur la saison sélectionnée, si spécifiée
+    if selected_season is not None:
+        df_win = df_win[df_win['tournament_date_y'] == selected_season]
+    
+    # Calculer le winrate moyen réel par saison
+    winrate_par_saison = df_win.groupby('tournament_date_y').agg(winrate_real=('winrates', 'mean')).reset_index()
+    
+    # Fusionner usage et winrate réel
+    stats = usage_par_saison.merge(winrate_par_saison, on='tournament_date_y', how='left')
     
     return stats
 
@@ -383,13 +376,21 @@ with tab3:
      decklists = table_wrk_decklists(conn)
      cards = table_wrk_cards(conn)
      tournements = table_wrk_tournements(conn)
+     win= table_wrk_tournaments_win(conn)
       
      option = decklists['deck'].unique()
-     st.selectbox("Rechercher un deck",option)
+     selected_deck = st.selectbox("Rechercher un deck",option)
      
      seasons = tournements['tournament_date_y'].dropna().unique()
      seasons = sorted(seasons)
      selected_season = st.selectbox("Choisir une saison (année)", options=[None] + seasons, index=0)
+
+     # Filtrer la table win selon le deck sélectionné
+     filtered_win = win[win['deck'] == selected_deck]
+     if not filtered_win.empty:
+        winrate_reel = filtered_win['winrate'].iloc[0]  # prends le 1er winrate correspondant
+     else:
+         winrate_reel = None
      
      
      col1, col2, col3= st.columns(3)
@@ -420,38 +421,38 @@ with tab3:
                     
                 )
      with col3:
-            winrate_reel = calcul_winrate_reel(tournements, selected_deck, selected_season)
-            if winrate_reel is not None:
-                st.metric("Win-Rate réel", f"{winrate_reel:.2%}")
-            else:
-                st.metric("Win-Rate réel", "Données indisponibles")
+            st.metric("Win-Rate réel", f"{winrate_reel:.2%}")
             
-  # Cartes du deck sélectionné
-     df_deck = decklists[decklists['deck'] == selected_deck]
-     unique_cards = df_deck['card_name'].unique()
-     selected_card = st.selectbox("Choisir une carte du deck", unique_cards)
+            
+# Cartes du deck sélectionné
+df_deck = decklists[decklists['deck'] == selected_deck]
+unique_cards = df_deck['card_name'].unique()
+selected_card = st.selectbox("Choisir une carte du deck", unique_cards)
 
-     if selected_card:
-            df_stats = analyse_usage_winrate_par_saison(decklists, tournements, selected_card, selected_deck, selected_season)
+if selected_card:
+    df_stats = analyse_usage_winrate_par_saison(decklists, tournements, win, selected_card, selected_deck, selected_season)
 
-            if df_stats.empty:
-                st.warning("Pas de données disponibles pour cette carte / saison.")
-            else:
-                fig, ax1 = plt.subplots(figsize=(10, 5))
-                ax1.bar(df_stats['tournament_date_y'], df_stats['usage'], color='skyblue', label='Usage (nombre de joueurs)')
-                ax1.set_xlabel('Saison (année)')
-                ax1.set_ylabel('Usage (nombre de joueurs)', color='blue')
-                ax1.tick_params(axis='y', labelcolor='blue')
+    if df_stats.empty:
+        st.warning("Pas de données disponibles pour cette carte / saison.")
+    else:
+        fig, ax1 = plt.subplots(figsize=(10, 5))
+        
+        # Bar plot usage
+        ax1.bar(df_stats['tournament_date_y'], df_stats['usage'], color='skyblue', label='Usage (nombre de joueurs)')
+        ax1.set_xlabel('Saison (année)')
+        ax1.set_ylabel('Usage (nombre de joueurs)', color='blue')
+        ax1.tick_params(axis='y', labelcolor='blue')
 
-                ax2 = ax1.twinx()
-                ax2.plot(df_stats['tournament_date_y'], df_stats['avg_winrate'], color='red', marker='o', label='Winrate moyen')
-                ax2.set_ylabel('Winrate moyen', color='red')
-                ax2.tick_params(axis='y', labelcolor='red')
-                ax2.set_ylim(0, 1)
+        # Line plot winrate réel moyen
+        ax2 = ax1.twinx()
+        ax2.plot(df_stats['tournament_date_y'], df_stats['winrate_real'], color='red', marker='o', label='Winrate réel moyen')
+        ax2.set_ylabel('Winrate réel moyen', color='red')
+        ax2.tick_params(axis='y', labelcolor='red')
+        ax2.set_ylim(0, 1)
 
-                plt.title(f"Usage et Winrate de la carte '{selected_card}' - Deck '{selected_deck}' - Saison '{selected_season or 'Toutes'}'")
-                fig.tight_layout()
-                st.pyplot(fig)
+        plt.title(f"Usage et Winrate de la carte '{selected_card}' - Deck '{selected_deck}' - Saison '{selected_season or 'Toutes'}'")
+        fig.tight_layout()
+        st.pyplot(fig)
 
      conn.close()
 
