@@ -15,7 +15,6 @@ for root, dirs, files in os.walk(tournaments_folder_path):
             html_file_path = os.path.join(root, file_name)
 
             try:
-                # Lecture du fichier HTML
                 with open(html_file_path, "r", encoding="utf-8") as file:
                     soup = BeautifulSoup(file, "html.parser")
             except UnicodeDecodeError:
@@ -29,10 +28,8 @@ for root, dirs, files in os.walk(tournaments_folder_path):
                 logging.error(f"Erreur inattendue lors de la lecture du fichier {html_file_path}: {e}")
                 continue
 
-            # Extraction du nom du tournoi
             tournament_name = soup.title.string.replace("Standings: ", "").replace(" | Limitless", "").strip()
 
-            # Extraction du code du tournoi
             tournament_script = soup.find("script", string=lambda text: text and "tournamentId" in text)
             tournament_id = None
             if tournament_script:
@@ -75,7 +72,6 @@ for root, dirs, files in os.walk(tournaments_folder_path):
                         logging.error(f"Erreur de conversion pour le joueur {row.get('data-name')}: {ve}")
                         continue
 
-            # Chargement du fichier JSON correspondant
             if tournament_id:
                 json_file_path = os.path.join(json_folder_path, f"{tournament_id}.json")
 
@@ -119,35 +115,30 @@ for root, dirs, files in os.walk(tournaments_folder_path):
                                     else:
                                         deck_parts.append(f'"{card_name}" ({extension}-{card_number}) x{card_count}')
 
-                                deck_string = ", ".join(deck_parts)
-                                player_data["deck"] = deck_string
+                                if deck_parts:
+                                    deck_string = ", ".join(deck_parts)
+                                    player_data["deck"] = deck_string
                                 break
 
             print(f"\nPlayers with Decks for {tournament_name}:")
             for player in players_tournaments_data:
                 print(player)
 
-
 players_json_folder_path = "C:/Users/matte/OneDrive/Bureau/SAE601_2025/data_collection/tournament_win"
-
 os.makedirs(players_json_folder_path, exist_ok=True)
 
-# Parcourez les données des joueurs et enregistrez-les dans des fichiers JSON individuels
 for player_data in players_tournaments_data:
     tournament_id = player_data["tournament_id"]
     player_name = player_data["name"]
 
-    # Créez un nom de fichier sûr en remplaçant les caractères non valides
     safe_player_name = "".join(c if c.isalnum() else "_" for c in player_name)
     json_file_name = f"{tournament_id}_{safe_player_name}.json"
     json_file_path = os.path.join(players_json_folder_path, json_file_name)
 
-    # Enregistrez les données du joueur dans un fichier JSON
     try:
         with open(json_file_path, "w", encoding="utf-8") as json_file:
             json.dump(player_data, json_file, ensure_ascii=False, indent=4)
     except Exception as e:
         logging.error(f"Erreur lors de l'écriture du fichier JSON {json_file_path}: {e}")
-
 
 print(player_data)
